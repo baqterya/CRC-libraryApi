@@ -3,6 +3,10 @@
 Projekt został stworzony na potrzeby zaliczenia kursu "Zaawansowana Aplikacja w Chmurze" w programie Corporate Readiness
 Certificate. Jest to REST API stworzone za pomocą biblioteki FastApi w języku Python. API jest symulacją części 
 systemu biblioteki. Pozwala dodawać autorów, książki oraz wykonywać na nich podstawowe zapytania CRUD.
+Aplikacja działa za pośrednictwem Microsoft Azure pod adresem:<br>
+https://crc-library-api.azurewebsites.net <br>
+Dokumentacja API jest dostępna pod adresem:<br>
+https://crc-library-api.azurewebsites.net/docs
 
 
 ### Local Setup
