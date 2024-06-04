@@ -1,8 +1,8 @@
 from datetime import datetime
 
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy import Column, Integer, String, DateTime, Date, func, Boolean, ForeignKey
-from sqlalchemy.orm import relationship
+from sqlalchemy import Integer, String, DateTime, Date, func, Boolean, ForeignKey
+from sqlalchemy.orm import relationship, mapped_column
 
 Base = declarative_base()
 
@@ -10,15 +10,15 @@ Base = declarative_base()
 class AuthorModel(Base):
     __tablename__ = 'authors'
 
-    id = Column(Integer, primary_key=True, autoincrement=True, index=True)
-    name_last = Column(String)
-    name_first = Column(String)
-    date_birth = Column(Date)
-    date_death = Column(Date, nullable=True)
-    country_of_birth = Column(String)
+    id = mapped_column(Integer, primary_key=True, autoincrement=True, index=True)
+    name_last = mapped_column(String)
+    name_first = mapped_column(String)
+    date_birth = mapped_column(Date)
+    date_death = mapped_column(Date, nullable=True)
+    country_of_birth = mapped_column(String)
 
-    time_created = Column(DateTime(timezone=True), server_default=func.now())
-    time_updated = Column(DateTime(timezone=True), onupdate=func.now())
+    time_created = mapped_column(DateTime(timezone=True), server_default=func.now())
+    time_updated = mapped_column(DateTime(timezone=True), onupdate=func.now())
 
     books = relationship('BookModel', back_populates='author')
 
@@ -26,20 +26,20 @@ class AuthorModel(Base):
 class BookModel(Base):
     __tablename__ = 'books'
 
-    id = Column(Integer, primary_key=True, autoincrement=True, index=True)
-    title = Column(String)
-    year_published = Column(Integer)
-    isbn = Column(String)
-    language = Column(String)
-    amount_total = Column(Integer)
-    amount_currently_borrowed = Column(Integer)
-    borrow_history = Column(String)
-    is_available = Column(Boolean)
+    id = mapped_column(Integer, primary_key=True, autoincrement=True, index=True)
+    title = mapped_column(String)
+    year_published = mapped_column(Integer)
+    isbn = mapped_column(String)
+    language = mapped_column(String)
+    amount_total = mapped_column(Integer)
+    amount_currently_borrowed = mapped_column(Integer)
+    borrow_history = mapped_column(String)
+    is_available = mapped_column(Boolean)
 
-    time_created = Column(DateTime(timezone=True), server_default=func.now())
-    time_updated = Column(DateTime(timezone=True), onupdate=func.now())
+    time_created = mapped_column(DateTime(timezone=True), server_default=func.now())
+    time_updated = mapped_column(DateTime(timezone=True), onupdate=func.now())
 
-    author_id = Column(Integer, ForeignKey('authors.id'))
+    author_id = mapped_column(Integer, ForeignKey('authors.id'))
     author = relationship('AuthorModel', back_populates='books')
 
     def last_borrowed(self) -> str:
