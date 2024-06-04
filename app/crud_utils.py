@@ -1,6 +1,7 @@
 from typing import Any
 
 from fastapi import HTTPException
+from sqlalchemy import select
 from sqlalchemy.orm import Session
 import app.models as models
 import app.schema as schema
@@ -13,8 +14,8 @@ class DBResponse:
 
 
 def get_author_by_id(db: Session, author_id: int) -> DBResponse:
-    db_author = db.query(models.AuthorModel).filter(
-        models.AuthorModel.id == author_id
+    db_author = db.execute(
+        select(models.AuthorModel).where(models.AuthorModel.id == author_id)
     ).first()
     if db_author is None:
         return DBResponse(None, f"Author with id {author_id} not found", 404)
@@ -22,9 +23,11 @@ def get_author_by_id(db: Session, author_id: int) -> DBResponse:
 
 
 def get_author_by_name(db: Session, author_name_last: str, author_name_first: str) -> DBResponse:
-    db_author = db.query(models.AuthorModel).filter(
-        models.AuthorModel.name_last.like(author_name_last),
-        models.AuthorModel.name_first.like(author_name_first)
+    db_author = db.execute(
+        select(models.AuthorModel).where(
+            models.AuthorModel.name_last == author_name_last,
+            models.AuthorModel.name_first == author_name_first
+        )
     ).first()
     if db_author is None:
         return DBResponse(None, f"Author with name '{author_name_last} {author_name_first}' not found", 404)
@@ -32,7 +35,9 @@ def get_author_by_name(db: Session, author_name_last: str, author_name_first: st
 
 
 def get_authors(db: Session, skip: int = 0, limit: int = 100):
-    return db.query(models.AuthorModel).offset(skip).limit(limit).all()
+    return db.execute(
+        select(models.AuthorModel).offset(skip).limit(limit)
+    ).all()
 
 
 def create_author(db: Session, author: schema.AuthorCreate) -> DBResponse:
@@ -67,8 +72,8 @@ def delete_author(db: Session, author_id: int) -> DBResponse:
 
 
 def get_book_by_id(db: Session, book_id: int) -> DBResponse:
-    db_book = db.query(models.BookModel).filter(
-        models.BookModel.id == book_id
+    db_book = db.execute(
+        select(models.BookModel).where(models.BookModel.id == book_id)
     ).first()
     if db_book is None:
         return DBResponse(None, f"Book with id {book_id} not found", 404)
@@ -76,8 +81,8 @@ def get_book_by_id(db: Session, book_id: int) -> DBResponse:
 
 
 def get_book_by_title(db: Session, book_title: str) -> DBResponse:
-    db_book = db.query(models.BookModel).filter(
-        models.BookModel.title.like(book_title)
+    db_book = db.execute(
+        select(models.BookModel).where(models.BookModel.title == book_title)
     ).first()
     if db_book is None:
         return DBResponse(None, f"Book with title '{book_title}' not found", 404)
@@ -85,7 +90,9 @@ def get_book_by_title(db: Session, book_title: str) -> DBResponse:
 
 
 def get_books(db: Session, skip: int = 0, limit: int = 100):
-    return db.query(models.BookModel).offset(skip).limit(limit).all()
+    return db.execute(
+        select(models.BookModel).offset(skip).limit(limit)
+    ).all()
 
 
 def create_book(db: Session, book: schema.BookCreate) -> DBResponse:
